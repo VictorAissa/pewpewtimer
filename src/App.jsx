@@ -115,7 +115,7 @@ function App() {
                         <div className="flex justify-between gap-2">
                             <label htmlFor="par">Par time :</label>
                             <input
-                                className="rounded-sm h-8 text-gray-700 text-right w-12 flex justify-center items-center"
+                                className="rounded-sm h-8 text-gray-700 w-10 text-center"
                                 type="number"
                                 id="parTime"
                                 value={values.parTime.displayed}
@@ -127,7 +127,7 @@ function App() {
                             <input
                                 type="number"
                                 id="delay"
-                                className="rounded-sm h-8 text-gray-700 text-right w-12 flex justify-center items-center"
+                                className="rounded-sm h-8 text-gray-700  w-10 text-center"
                                 value={values.delay.displayed}
                                 onChange={handleChange}
                             />
@@ -138,7 +138,7 @@ function App() {
                         <input
                             type="number"
                             id="reps"
-                            className="rounded-sm w-12 h-8 text-gray-700 text-right flex justify-center items-center"
+                            className="rounded-sm w-10 h-8 text-gray-700 text-center"
                             value={values.reps.displayed}
                             onChange={handleChange}
                         />
