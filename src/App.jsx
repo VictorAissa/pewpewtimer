@@ -108,12 +108,12 @@ function App() {
                 values.isPar ? 'isPar' : 'isDelay'
             }`}
         >
-            <div className="h-[500px] w-9/12 lg:w-1/3 flex flex-col bg-[#353535] rounded-md">
+            <div className="h-[500px] w-11/12 md:w-9/12 lg:w-1/3 flex flex-col bg-[#353535] rounded-md">
                 <h1 className="text-center text-3xl py-6 ">Pew Pew Timer</h1>
-                <form className="flex justify-between p-6 text-xl gap-4">
+                <form className="flex justify-between p-6 text-xl gap-2">
                     <div className="flex flex-col text-xl gap-4 w-40">
                         <div className="flex justify-between gap-2">
-                            <label htmlFor="par">Par time :</label>
+                            <label htmlFor="par">ParTime :</label>
                             <input
                                 className="rounded-sm h-8 text-gray-700 w-10 text-center"
                                 type="number"
