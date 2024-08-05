@@ -115,7 +115,7 @@ function App() {
                         <div className="flex justify-between gap-2">
                             <label htmlFor="par">Par time :</label>
                             <input
-                                className="rounded-sm h-8 text-gray-700 text-right px-2 w-16"
+                                className="rounded-sm h-8 text-gray-700 text-right w-12 flex justify-center items-center"
                                 type="number"
                                 id="parTime"
                                 value={values.parTime.displayed}
@@ -127,7 +127,7 @@ function App() {
                             <input
                                 type="number"
                                 id="delay"
-                                className="rounded-sm h-8 text-gray-700 text-right px-2 w-16"
+                                className="rounded-sm h-8 text-gray-700 text-right w-12 flex justify-center items-center"
                                 value={values.delay.displayed}
                                 onChange={handleChange}
                             />
@@ -138,7 +138,7 @@ function App() {
                         <input
                             type="number"
                             id="reps"
-                            className="rounded-sm w-16 h-8 text-gray-700 text-right px-2"
+                            className="rounded-sm w-12 h-8 text-gray-700 text-right flex justify-center items-center"
                             value={values.reps.displayed}
                             onChange={handleChange}
                         />
@@ -146,7 +146,9 @@ function App() {
                 </form>
 
                 <div className="flex flex-col items-center gap-2 text-xl p-6">
-                    <div className={values.isPar ? 'isPar_text' : 'isDelay_text'} >
+                    <div
+                        className={values.isPar ? 'isPar_text' : 'isDelay_text'}
+                    >
                         {values.isRunning
                             ? values.isPar
                                 ? 'SHOOT !'
