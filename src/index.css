@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#root {
+    height: 100%;
+    width: 100%;
+}
+
+.isPar {
+    background-color: #dd6e42;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.isDelay {
+    background-color: #96897b;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.isPar_text {
+    color: #f87171;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.isDelay_text {
+    color: #f9fafb;
+    transition: background-color 0.3s ease-in-out;
+}
