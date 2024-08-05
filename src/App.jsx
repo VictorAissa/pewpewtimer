@@ -111,7 +111,7 @@ function App() {
             <div className="h-[500px] w-11/12 md:w-9/12 lg:w-1/3 flex flex-col bg-[#353535] rounded-md">
                 <h1 className="text-center text-3xl py-6 ">Pew Pew Timer</h1>
                 <form className="flex justify-between p-6 text-xl gap-2">
-                    <div className="flex flex-col text-xl gap-4 w-40">
+                    <div className="flex flex-col text-xl gap-4 w-36">
                         <div className="flex justify-between gap-2">
                             <label htmlFor="par">ParTime :</label>
                             <input
@@ -133,7 +133,7 @@ function App() {
                             />
                         </div>
                     </div>
-                    <div className="flex justify-between gap-2 w-36">
+                    <div className="flex justify-between gap-2 w-28">
                         <label htmlFor="reps">Reps :</label>
                         <input
                             type="number"
