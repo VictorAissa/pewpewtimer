@@ -32,7 +32,7 @@ function App() {
             })
         );
         playSound(startSound);
-        for (let index = 0; index < values.parTime.displayed; index++) {
+        for (let index = 0; index < values.parTime.actual; index++) {
             if (signal.aborted) return;
             await new Promise((resolve) => {
                 setTimeout(() => {
@@ -40,7 +40,7 @@ function App() {
                         dispatch(tick(TypeEnum.parTime));
                     }
                     resolve();
-                }, 1000);
+                }, 100);
             });
         }
         !signal.aborted && playSound(endSound);
@@ -54,7 +54,7 @@ function App() {
                 value: false,
             })
         );
-        for (let index = 0; index < values.delay.displayed; index++) {
+        for (let index = 0; index < values.delay.actual; index++) {
             if (signal.aborted) return;
             await new Promise((resolve) => {
                 setTimeout(() => {
@@ -62,7 +62,7 @@ function App() {
                         dispatch(tick(TypeEnum.delay));
                     }
                     resolve();
-                }, 1000);
+                }, 100);
             });
         }
         dispatch(reload(TypeEnum.delay));
@@ -102,6 +102,10 @@ function App() {
         dispatch(reset());
     };
 
+    const getDecimalDisplay = (number) => {
+        return `${Math.floor(number / 10)} : ${number % 10}`;
+    };
+
     return (
         <div
             className={`h-full w-full flex justify-center py-10 text-gray-50 ${
@@ -115,7 +119,7 @@ function App() {
                         <div className="flex justify-between gap-2">
                             <label htmlFor="par">ParTime :</label>
                             <input
-                                className="rounded-sm h-8 text-gray-700 w-10 text-center"
+                                className="rounded-sm h-8 text-gray-700 w-12 text-center"
                                 type="number"
                                 id="parTime"
                                 value={values.parTime.displayed}
@@ -127,7 +131,7 @@ function App() {
                             <input
                                 type="number"
                                 id="delay"
-                                className="rounded-sm h-8 text-gray-700  w-10 text-center"
+                                className="rounded-sm h-8 text-gray-700 w-12 text-center"
                                 value={values.delay.displayed}
                                 onChange={handleChange}
                             />
@@ -138,7 +142,7 @@ function App() {
                         <input
                             type="number"
                             id="reps"
-                            className="rounded-sm w-10 h-8 text-gray-700 text-center"
+                            className="rounded-sm w-12 h-8 text-gray-700 text-center"
                             value={values.reps.displayed}
                             onChange={handleChange}
                         />
@@ -147,7 +151,13 @@ function App() {
 
                 <div className="flex flex-col items-center gap-2 text-xl p-6">
                     <div
-                        className={values.isPar ? 'isPar_text' : 'isDelay_text'}
+                        className={
+                            values.isRunning
+                                ? values.isPar
+                                    ? 'isPar_text'
+                                    : 'isDelay_text'
+                                : 'isReady_text'
+                        }
                     >
                         {values.isRunning
                             ? values.isPar
@@ -157,8 +167,8 @@ function App() {
                     </div>
                     <div className="w-44 h-10 rounded-sm bg-white flex justify-center items-center text-gray-800 text-2xl">
                         {values.isPar
-                            ? values.parTime.actual
-                            : values.delay.actual}
+                            ? getDecimalDisplay(values.parTime.actual)
+                            : getDecimalDisplay(values.delay.actual)}
                     </div>
                     <div>{`#${values.reps.actual}`}</div>
                 </div>

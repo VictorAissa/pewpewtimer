@@ -20,11 +20,16 @@ body,
 }
 
 .isPar_text {
-    color: #f87171;
+    color: #ef4444;
     transition: background-color 0.3s ease-in-out;
 }
 
 .isDelay_text {
+    color: #95C623;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.isReady_text {
     color: #f9fafb;
     transition: background-color 0.3s ease-in-out;
 }

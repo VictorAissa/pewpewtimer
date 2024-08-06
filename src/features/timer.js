@@ -25,11 +25,11 @@ export const timer = createSlice({
         updateValue: (state, action) => {
             switch (action.payload.type) {
                 case TypeEnum.parTime:
-                    state.parTime.actual = action.payload.value;
+                    state.parTime.actual = action.payload.value * 10;
                     state.parTime.displayed = action.payload.value;
                     break;
                 case TypeEnum.delay:
-                    state.delay.actual = action.payload.value;
+                    state.delay.actual = action.payload.value * 10;
                     state.delay.displayed = action.payload.value;
                     break;
                 case TypeEnum.reps:
@@ -71,8 +71,8 @@ export const timer = createSlice({
             }
         },
         reset: (state) => {
-            state.parTime.actual = state.parTime.displayed;
-            state.delay.actual = state.delay.displayed;
+            state.parTime.actual = state.parTime.displayed * 10;
+            state.delay.actual = state.delay.displayed * 10;
             state.reps.actual = state.reps.displayed;
             state.isRunning = false;
             state.isPar = false;
@@ -80,10 +80,10 @@ export const timer = createSlice({
         reload: (state, action) => {
             switch (action.payload) {
                 case TypeEnum.parTime:
-                    state.parTime.actual = state.parTime.displayed;
+                    state.parTime.actual = state.parTime.displayed * 10;
                     break;
                 case TypeEnum.delay:
-                    state.delay.actual = state.delay.displayed;
+                    state.delay.actual = state.delay.displayed * 10;
                     break;
                 case TypeEnum.reps:
                     state.reps.actual = state.reps.displayed;
