@@ -2,13 +2,21 @@ import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import startSound from './assets/sound/smooth.mp3';
 import endSound from './assets/sound/sharp.mp3';
-import { updateValue, tick, reset, reload } from './features/timer';
+import {
+    updateValue,
+    tick,
+    reset,
+    reload,
+    applyRandomizedValue,
+} from './features/timer';
 import { TypeEnum } from './utils/enums';
 
 function App() {
     const values = useSelector((state) => state.timer);
     const dispatch = useDispatch();
     const [controller, setController] = useState(null);
+    const [isRandomized, setIsRandomized] = useState(false);
+    const randomizeRatio = import.meta.env.VITE_RANDOMIZE_RATIO;
 
     const playSound = (file) => {
         const audio = new Audio(file);
@@ -47,14 +55,22 @@ function App() {
         dispatch(reload(TypeEnum.parTime));
     };
 
+    const doRandomize = (value) => {
+        return value + 20;
+    };
+
     const tickDelay = async (signal) => {
+        const actualParTimeValue = isRandomized
+            ? doRandomize(values.delay.actual)
+            : values.delay.actual;
+        dispatch(applyRandomizedValue(actualParTimeValue));
         dispatch(
             updateValue({
                 type: TypeEnum.isPar,
                 value: false,
             })
         );
-        for (let index = 0; index < values.delay.actual; index++) {
+        for (let index = 0; index < actualParTimeValue; index++) {
             if (signal.aborted) return;
             await new Promise((resolve) => {
                 setTimeout(() => {
@@ -93,7 +109,6 @@ function App() {
                 value: false,
             })
         );
-        //dispatch(reload(TypeEnum.reps));
         dispatch(reset());
     };
 
@@ -105,6 +120,15 @@ function App() {
     const getDecimalDisplay = (number) => {
         return `${Math.floor(number / 10)} : ${number % 10}`;
     };
+
+    const handleRandomize = (event) => {
+        event.preventDefault();
+        setIsRandomized((prevIsRandomized) => !prevIsRandomized);
+    };
+
+    useEffect(() => {
+        console.log(randomizeRatio);
+    }, []);
 
     return (
         <div
@@ -137,15 +161,23 @@ function App() {
                             />
                         </div>
                     </div>
-                    <div className="flex justify-between gap-2 w-28">
-                        <label htmlFor="reps">Reps :</label>
-                        <input
-                            type="number"
-                            id="reps"
-                            className="rounded-sm w-12 h-8 text-gray-700 text-center"
-                            value={values.reps.displayed}
-                            onChange={handleChange}
-                        />
+                    <div className="flex flex-col text-xl gap-3 w-36">
+                        <div className="flex justify-between gap-2 w-28">
+                            <label htmlFor="reps">Reps :</label>
+                            <input
+                                type="number"
+                                id="reps"
+                                className="rounded-sm w-12 h-8 text-gray-700 text-center"
+                                value={values.reps.displayed}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <button
+                            className={`h-10 rounded ${isRandomized ? 'is-randomized' : 'is-derandomized'}`}
+                            onClick={(event) => handleRandomize(event)}
+                        >
+                            {isRandomized ? 'Unrandomize' : 'Randomize'}
+                        </button>
                     </div>
                 </form>
 
@@ -175,13 +207,13 @@ function App() {
 
                 <div className="flex justify-center gap-6 p-6">
                     <button
-                        className="w-20 h-10 bg-[#95C623] rounded-sm"
+                        className="w-20 h-10 bg-[#95C623] rounded"
                         onClick={start}
                     >
                         Start
                     </button>
                     <button
-                        className="w-20 h-10 bg-red-500 rounded-sm"
+                        className="w-20 h-10 bg-red-500 rounded"
                         onClick={stop}
                     >
                         Stop

@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+    --transition-bg-color: background-color 0.3s ease-in-out;
+    --red: #ef4444;
+    --light-red: #dd6e42;
+    --green: #95c623;
+    --khaki: #96897b;
+}
+
 html,
 body,
 #root {
@@ -9,27 +17,41 @@ body,
     width: 100%;
 }
 
+.transition-bg-color {
+    transition: var(--transition-bg-color);
+}
+
 .isPar {
-    background-color: #dd6e42;
-    transition: background-color 0.3s ease-in-out;
+    background-color: var(--light-red);
+    transition: var(--transition-bg-color);
 }
 
 .isDelay {
-    background-color: #96897b;
-    transition: background-color 0.3s ease-in-out;
+    background-color: var(--khaki);
+    transition: var(--transition-bg-color);
 }
 
 .isPar_text {
-    color: #ef4444;
-    transition: background-color 0.3s ease-in-out;
+    color: --red;
+    transition: var(--transition-bg-color);
 }
 
 .isDelay_text {
-    color: #95C623;
-    transition: background-color 0.3s ease-in-out;
+    color: var(--green);
+    transition: var(--transition-bg-color);
 }
 
 .isReady_text {
     color: #f9fafb;
-    transition: background-color 0.3s ease-in-out;
+    transition: var(--transition-bg-color);
+}
+
+button.is-randomized {
+    background-color: var(--red);
+    transition: var(--transition-bg-color);
+}
+
+button.is-derandomized {
+    background-color: var(--khaki);
+    transition: var(--transition-bg-color);
 }

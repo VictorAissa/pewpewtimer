@@ -95,8 +95,12 @@ export const timer = createSlice({
                     );
             }
         },
+        applyRandomizedValue: (state, action) => {
+            state.delay.actual = action.payload;
+        },
     },
 });
 
-export const { updateValue, tick, reset, reload } = timer.actions;
+export const { updateValue, tick, reset, reload, applyRandomizedValue } =
+    timer.actions;
 export default timer.reducer;
