@@ -228,7 +228,7 @@ function App() {
                             ? values.isPar
                                 ? 'SHOOT !'
                                 : 'WAIT'
-                            : 'PRET'}
+                            : 'READY'}
                     </div>
                     <div className="w-44 h-10 rounded-sm bg-white flex justify-center items-center text-gray-800 text-2xl">
                         {values.isPar
