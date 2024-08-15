@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import startSound from './assets/sound/smooth.mp3';
 import endSound from './assets/sound/sharp.mp3';
@@ -18,20 +18,32 @@ function App() {
     const [isRandomized, setIsRandomized] = useState(false);
     const randomizeRatio = import.meta.env.VITE_RANDOMIZE_RATIO;
 
+    /* UTILS */
+
     const playSound = (file) => {
         const audio = new Audio(file);
         audio.play();
     };
 
-    const handleChange = (event) => {
-        dispatch(
-            updateValue({
-                type: TypeEnum[event.target.id],
-                value: event.target.valueAsNumber,
-            })
-        );
+    const doRandomize = (value) => {
+        const randomizedPart =
+            value * (Math.random() * randomizeRatio * 2 - randomizeRatio);
+        return Math.round(value + randomizedPart);
     };
 
+    const getDecimalDisplay = (number) => {
+        return `${Math.floor(number / 10)} : ${number % 10}`;
+    };
+
+    /* DOMAIN */
+
+    /**
+     * Handles the ticking process for parTime stage.
+     * If the signal is aborted during execution, the function will exit early.
+     *
+     * @param {AbortSignal} signal - The signal object that can be used to abort the ticking process.
+     * @returns {Promise<void>} A promise that resolves when the ticking process is complete or aborted.
+     */
     const tickParTime = async (signal) => {
         dispatch(
             updateValue({
@@ -40,6 +52,7 @@ function App() {
             })
         );
         playSound(startSound);
+
         for (let index = 0; index < values.parTime.actual; index++) {
             if (signal.aborted) return;
             await new Promise((resolve) => {
@@ -51,14 +64,18 @@ function App() {
                 }, 100);
             });
         }
+
         !signal.aborted && playSound(endSound);
         dispatch(reload(TypeEnum.parTime));
     };
 
-    const doRandomize = (value) => {
-        return value + 20;
-    };
-
+    /**
+     * Handles the ticking process for delay stage, taking the eventual randomise need into account.
+     * If the signal is aborted during execution, the function will exit early.
+     *
+     * @param {AbortSignal} signal - The signal object that can be used to abort the ticking process.
+     * @returns {Promise<void>} A promise that resolves when the ticking process is complete or aborted.
+     */
     const tickDelay = async (signal) => {
         const actualParTimeValue = isRandomized
             ? doRandomize(values.delay.actual)
@@ -70,6 +87,7 @@ function App() {
                 value: false,
             })
         );
+
         for (let index = 0; index < actualParTimeValue; index++) {
             if (signal.aborted) return;
             await new Promise((resolve) => {
@@ -81,9 +99,13 @@ function App() {
                 }, 100);
             });
         }
+
         dispatch(reload(TypeEnum.delay));
     };
 
+    /**
+     * Handles the global process once the timer is launched.
+     */
     const start = async () => {
         const newController = new AbortController();
         setController(newController);
@@ -103,6 +125,7 @@ function App() {
             await tickParTime(signal);
             !signal.aborted && dispatch(tick(TypeEnum.reps));
         }
+
         dispatch(
             updateValue({
                 type: TypeEnum.isRunning,
@@ -112,23 +135,29 @@ function App() {
         dispatch(reset());
     };
 
+    /**
+     * Handles the reset operations once the timer is stopped.
+     */
     const stop = () => {
         controller.abort();
         dispatch(reset());
     };
 
-    const getDecimalDisplay = (number) => {
-        return `${Math.floor(number / 10)} : ${number % 10}`;
+    /* EVENTS */
+
+    const handleChange = (event) => {
+        dispatch(
+            updateValue({
+                type: TypeEnum[event.target.id],
+                value: event.target.valueAsNumber,
+            })
+        );
     };
 
     const handleRandomize = (event) => {
         event.preventDefault();
         setIsRandomized((prevIsRandomized) => !prevIsRandomized);
     };
-
-    useEffect(() => {
-        console.log(randomizeRatio);
-    }, []);
 
     return (
         <div
@@ -173,7 +202,11 @@ function App() {
                             />
                         </div>
                         <button
-                            className={`h-10 rounded ${isRandomized ? 'is-randomized' : 'is-derandomized'}`}
+                            className={`h-10 rounded ${
+                                isRandomized
+                                    ? 'is-randomized'
+                                    : 'is-derandomized'
+                            }`}
                             onClick={(event) => handleRandomize(event)}
                         >
                             {isRandomized ? 'Unrandomize' : 'Randomize'}
