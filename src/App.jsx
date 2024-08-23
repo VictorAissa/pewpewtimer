@@ -161,6 +161,7 @@ function App() {
     };
 
     useEffect(() => {
+        // no mobile screen lock handling
         const noSleep = new NoSleep();
 
         const enableNoSleep = () => {
