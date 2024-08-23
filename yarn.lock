@@ -374,6 +374,11 @@
   resolved "https://registry.yarnpkg.com/@ungap/structured-clone/-/structured-clone-1.2.0.tgz#756641adb587851b5ccb3e095daf27ae581c8406"
   integrity sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==
 
+"@uriopass/nosleep.js@^0.12.2":
+  version "0.12.2"
+  resolved "https://registry.yarnpkg.com/@uriopass/nosleep.js/-/nosleep.js-0.12.2.tgz#11d0f35034543c29b878e3e343e1d5a7058046c0"
+  integrity sha512-aMrhyZ/pO1L0EGxI3EaQhijKDi2LZd++FtrHQItP5+lVSRD3EpwaXlDoBvCBCO9+U1E6gOxo400OC79yRHzR/A==
+
 "@vitejs/plugin-react-swc@^3.0.0":
   version "3.7.0"
   resolved "https://registry.yarnpkg.com/@vitejs/plugin-react-swc/-/plugin-react-swc-3.7.0.tgz#e456c0a6d7f562268e1d231af9ac46b86ef47d88"

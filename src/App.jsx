@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import NoSleep from '@uriopass/nosleep.js';
 import startSound from './assets/sound/smooth.mp3';
 import endSound from './assets/sound/sharp.mp3';
 import {
@@ -160,26 +161,21 @@ function App() {
     };
 
     useEffect(() => {
-        let wakeLock = null;
+        const noSleep = new NoSleep();
 
-        const requestWakeLock = async () => {
-            try {
-                if ('wakeLock' in navigator) {
-                    wakeLock = await navigator.wakeLock.request('screen');
-                }
-            } catch (err) {
-                console.error(`WakeLock failed to init : ${err.message}`);
-            }
+        const enableNoSleep = () => {
+            noSleep.enable();
         };
 
-        requestWakeLock();
+        const disableNoSleep = () => {
+            noSleep.disable();
+        };
+
+        document.addEventListener('click', enableNoSleep, { once: true });
 
         return () => {
-            if (wakeLock) {
-                wakeLock.release().then(() => {
-                    console.log('Wake Lock inactive');
-                });
-            }
+            disableNoSleep();
+            document.removeEventListener('click', enableNoSleep);
         };
     }, []);
 
