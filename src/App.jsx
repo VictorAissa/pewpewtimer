@@ -159,6 +159,30 @@ function App() {
         setIsRandomized((prevIsRandomized) => !prevIsRandomized);
     };
 
+    useEffect(() => {
+        let wakeLock = null;
+
+        const requestWakeLock = async () => {
+            try {
+                if ('wakeLock' in navigator) {
+                    wakeLock = await navigator.wakeLock.request('screen');
+                }
+            } catch (err) {
+                console.error(`WakeLock failed to init : ${err.message}`);
+            }
+        };
+
+        requestWakeLock();
+
+        return () => {
+            if (wakeLock) {
+                wakeLock.release().then(() => {
+                    console.log('Wake Lock inactive');
+                });
+            }
+        };
+    }, []);
+
     return (
         <div
             className={`h-full w-full flex justify-center py-10 text-gray-50 ${
