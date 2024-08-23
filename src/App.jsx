@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import startSound from './assets/sound/smooth.mp3';
 import endSound from './assets/sound/sharp.mp3';
