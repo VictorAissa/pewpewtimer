@@ -8,6 +8,7 @@
     --light-red: #dd6e42;
     --green: #95c623;
     --khaki: #96897b;
+    --khaki-dark: #353535;
 }
 
 html,
@@ -32,7 +33,7 @@ body,
 }
 
 .isPar_text {
-    color: var(--red);
+    color: white;
     transition: var(--transition-bg-color);
 }
 
@@ -52,6 +53,6 @@ button.is-randomized {
 }
 
 button.is-derandomized {
-    background-color: var(--khaki);
+    background-color: var(--khaki-dark);
     transition: var(--transition-bg-color);
 }
