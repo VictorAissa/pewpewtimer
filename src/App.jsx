@@ -30,6 +30,7 @@ function App() {
     };
 
     const getDecimalDisplay = (number) => {
+        if (isNaN(number)) return '0';
         return `${Math.floor(number / 10)} : ${number % 10}`;
     };
 
@@ -220,6 +221,13 @@ function App() {
                                 className="rounded-sm w-12 h-8 text-gray-700 text-center"
                                 value={values.reps.displayed}
                                 onChange={handleChange}
+                                step="1"
+                                pattern="[0-100]*"
+                                onKeyDown={(e) => {
+                                    if (e.key === '.' || e.key === ',') {
+                                        e.preventDefault();
+                                    }
+                                }}
                             />
                         </div>
                         <button
@@ -256,7 +264,11 @@ function App() {
                             ? getDecimalDisplay(values.parTime.actual)
                             : getDecimalDisplay(values.delay.actual)}
                     </div>
-                    <div>{`#${values.reps.actual}`}</div>
+                    <div>
+                        {isNaN(values.reps.actual)
+                            ? '0'
+                            : `Round ${values.reps.actual}`}
+                    </div>
                 </div>
 
                 <div className="flex justify-center gap-6 p-6">
