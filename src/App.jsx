@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import NoSleep from '@uriopass/nosleep.js';
-import startSound from './assets/sound/smooth.mp3';
-import endSound from './assets/sound/sharp.mp3';
+import audioService from './services/AudioService';
 import {
     updateValue,
     tick,
@@ -21,10 +20,8 @@ function App() {
 
     /* UTILS */
 
-    const playSound = (file) => {
-        const audio = new Audio(file);
-        audio.play();
-    };
+    const playBeepStart = () => audioService.playSound('beepStart');
+    const playBeepEnd = () => audioService.playSound('beepEnd');
 
     const doRandomize = (value) => {
         const randomizedPart =
@@ -52,7 +49,7 @@ function App() {
                 value: true,
             })
         );
-        playSound(startSound);
+        playBeepStart();
 
         for (let index = 0; index < values.parTime.actual; index++) {
             if (signal.aborted) return;
@@ -66,7 +63,7 @@ function App() {
             });
         }
 
-        !signal.aborted && playSound(endSound);
+        !signal.aborted && playBeepEnd();
         dispatch(reload(TypeEnum.parTime));
     };
 
@@ -108,9 +105,8 @@ function App() {
      * Handles the global process once the timer is launched.
      */
     const start = async () => {
-        const newController = new AbortController();
-        setController(newController);
-        const signal = newController.signal;
+        if (values.isRunning) return;
+        await audioService.init();
 
         dispatch(
             updateValue({
@@ -118,6 +114,10 @@ function App() {
                 value: true,
             })
         );
+
+        const newController = new AbortController();
+        setController(newController);
+        const signal = newController.signal;
 
         for (let index = 0; index < values.reps.actual; index++) {
             if (signal.aborted) break;
