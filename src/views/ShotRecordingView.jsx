@@ -1,4 +1,3 @@
-// views/ShotRecordingView.jsx
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Button from '../components/Button';
@@ -7,10 +6,10 @@ import RandomizeButton from '../components/RandomizeButton';
 import TimeDisplay from '../components/TimeDisplay';
 import {
     updateValue,
-    tick,
+    //tick,
     reset,
-    reload,
-    applyRandomizedValue,
+    //reload,
+    //applyRandomizedValue,
 } from '../features/timer';
 import { TypeEnum } from '../utils/enums';
 import shotDetectionService from '../services/ShotDetectionService';
@@ -23,29 +22,23 @@ import {
     stopRecording as stopRecordingAction,
 } from '../features/shotRecording';
 import { formatShotData } from '../utils/shotFormatters';
-
-const randomizeRatio = import.meta.env.VITE_RANDOMIZE_RATIO || 0.2;
+import { useTimerTick } from '../hooks/useTimer';
 
 function ShotRecordingView() {
     const values = useSelector((state) => state.timer);
     const dispatch = useDispatch();
     const [isRandomized, setIsRandomized] = useState(false);
-    const { audioThreshold, shots, audioLevel } = useSelector(
+    const { audioThreshold, audioLevel } = useSelector(
         (state) => state.shotRecording
     );
     const shotRecording = useSelector((state) => state.shotRecording);
     const formattedShots = formatShotData(shotRecording);
     const [controller, setController] = useState(null);
     const isRecording = shotRecording.isRecording;
+    const [error, setError] = useState(null);
+    const { tickDelay } = useTimerTick();
 
     const playBeepStart = () => audioService.playSound('beepStart');
-
-    // TODO export (idem autre view)
-    const doRandomize = (value) => {
-        const randomizedPart =
-            value * (Math.random() * randomizeRatio * 2 - randomizeRatio);
-        return Math.round(value + randomizedPart);
-    };
 
     const handleDelayChange = (event) => {
         dispatch(
@@ -56,40 +49,14 @@ function ShotRecordingView() {
         );
     };
 
-    //TODO export (idem autre view)
-    const tickDelay = async (signal) => {
-        const actualDelayValue = isRandomized
-            ? doRandomize(values.delay.actual)
-            : values.delay.actual;
-
-        dispatch(applyRandomizedValue(actualDelayValue));
-        dispatch(updateValue({ type: TypeEnum.isPar, value: false }));
-
-        for (let index = 0; index < actualDelayValue; index++) {
-            if (signal.aborted) return;
-            await new Promise((resolve) => {
-                setTimeout(() => {
-                    if (!signal.aborted) {
-                        dispatch(tick(TypeEnum.delay));
-                    }
-                    resolve();
-                }, 100);
-            });
-        }
-
-        dispatch(reload(TypeEnum.delay));
-    };
-
     const start = async () => {
         if (values.isRunning) return;
 
-        // Reset session précédente
         dispatch(resetSession());
 
-        // Initialiser l'audio
         await audioService.init();
 
-        // Forcer reps à 1
+        // Force round length to 1
         dispatch(updateValue({ type: TypeEnum.reps, value: 1 }));
 
         dispatch(updateValue({ type: TypeEnum.isRunning, value: true }));
@@ -98,19 +65,15 @@ function ShotRecordingView() {
         setController(newController);
         const signal = newController.signal;
 
-        // Phase de delay
-        await tickDelay(signal);
+        await tickDelay(signal, isRandomized);
 
         if (!signal.aborted) {
-            // Passage en mode recording
             dispatch(updateValue({ type: TypeEnum.isPar, value: true }));
             playBeepStart();
 
-            // Démarrer l'enregistrement des coups
             const startTime = Date.now();
             dispatch(startRecording(startTime));
 
-            // Démarrer l'écoute du micro
             shotDetectionService.startListening(
                 (timestamp) => {
                     if (
@@ -129,38 +92,38 @@ function ShotRecordingView() {
     };
 
     const stop = () => {
-        // Arrêter le controller si existe
         if (controller) {
             controller.abort();
         }
 
-        // Arrêter l'écoute
         shotDetectionService.stopListening();
 
-        // Arrêter l'enregistrement dans Redux
         dispatch(stopRecordingAction());
 
-        // Reset le timer
         dispatch(reset());
         dispatch(updateValue({ type: TypeEnum.isRunning, value: false }));
     };
 
     useEffect(() => {
         const initMic = async () => {
+            setError(null);
+
+            if (!shotDetectionService.isSupported()) {
+                setError('Shots detection is not supported by this browser.');
+                return;
+            }
+
             try {
                 await shotDetectionService.init();
                 console.log('Microphone initialisé');
             } catch (error) {
-                console.error('Erreur init micro:', error);
-                // Gérer l'erreur dans l'UI
+                console.error('Error init micro:', error);
+                setError(error.message);
             }
         };
 
-        //if (shotDetectionService.isSupported()) {
-            initMic();
-        //}
+        initMic();
 
-        // Cleanup au démontage
         return () => {
             shotDetectionService.cleanup();
         };
@@ -205,11 +168,15 @@ function ShotRecordingView() {
                         : 'READY'}
                 </div>
                 <TimeDisplay value={values.delay.actual} isPar={false} />
-                {isRecording && (
-                    <AudioLevelIndicator
-                        level={audioLevel}
-                        threshold={audioThreshold}
-                    />
+                {error ? (
+                    <div className="text-red-500 font-semibold">{error}</div>
+                ) : (
+                    isRecording && (
+                        <AudioLevelIndicator
+                            level={audioLevel}
+                            threshold={audioThreshold}
+                        />
+                    )
                 )}
             </div>
 
@@ -226,7 +193,7 @@ function ShotRecordingView() {
                 </Button>
             </div>
 
-            {/* Zone d'affichage des shots */}
+            {/* Shots display zone*/}
             <div className="p-6">
                 <h3 className="text-lg font-semibold mb-2">Shots:</h3>
                 <div className="bg-gray-700 rounded p-4 min-h-[100px] max-h-[200px] overflow-y-auto">

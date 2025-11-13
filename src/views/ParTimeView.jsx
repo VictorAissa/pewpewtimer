@@ -6,29 +6,24 @@ import {
     tick,
     reset,
     reload,
-    applyRandomizedValue,
+    //applyRandomizedValue,
 } from '../features/timer';
 import { TypeEnum } from '../utils/enums';
 import Button from '../components/Button';
 import RandomizeButton from '../components/RandomizeButton';
 import TimeDisplay from '../components/TimeDisplay';
+import { useTimerTick } from '../hooks/useTimer';
 
 function ParTimeView() {
     const values = useSelector((state) => state.timer);
     const dispatch = useDispatch();
     const [controller, setController] = useState(null);
     const [isRandomized, setIsRandomized] = useState(false);
-    const randomizeRatio = import.meta.env.VITE_RANDOMIZE_RATIO;
+    const { tickDelay } = useTimerTick();
 
     /* UTILS */
     const playBeepStart = () => audioService.playSound('beepStart');
     const playBeepEnd = () => audioService.playSound('beepEnd');
-
-    const doRandomize = (value) => {
-        const randomizedPart =
-            value * (Math.random() * randomizeRatio * 2 - randomizeRatio);
-        return Math.round(value + randomizedPart);
-    };
 
     /* DOMAIN */
     const tickParTime = async (signal) => {
@@ -56,33 +51,6 @@ function ParTimeView() {
         dispatch(reload(TypeEnum.parTime));
     };
 
-    const tickDelay = async (signal) => {
-        const actualDelayValue = isRandomized
-            ? doRandomize(values.delay.actual)
-            : values.delay.actual;
-        dispatch(applyRandomizedValue(actualDelayValue));
-        dispatch(
-            updateValue({
-                type: TypeEnum.isPar,
-                value: false,
-            })
-        );
-
-        for (let index = 0; index < actualDelayValue; index++) {
-            if (signal.aborted) return;
-            await new Promise((resolve) => {
-                setTimeout(() => {
-                    if (!signal.aborted) {
-                        dispatch(tick(TypeEnum.delay));
-                    }
-                    resolve();
-                }, 100);
-            });
-        }
-
-        dispatch(reload(TypeEnum.delay));
-    };
-
     const start = async () => {
         if (values.isRunning) return;
         await audioService.init();
@@ -100,7 +68,7 @@ function ParTimeView() {
 
         for (let index = 0; index < values.reps.actual; index++) {
             if (signal.aborted) break;
-            await tickDelay(signal);
+            await tickDelay(signal, isRandomized);
             if (signal.aborted) break;
             await tickParTime(signal);
             !signal.aborted && dispatch(tick(TypeEnum.reps));
