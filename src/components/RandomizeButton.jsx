@@ -1,4 +1,5 @@
 function RandomizeButton({ isRandomized, onToggle, className = '' }) {
+    
     const handleClick = (event) => {
         event.preventDefault();
         onToggle();

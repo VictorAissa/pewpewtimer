@@ -16,6 +16,7 @@ const initialState = {
     },
     isRunning: false,
     isPar: false,
+    randomRatio: parseFloat(import.meta.env.VITE_RANDOMIZE_RATIO || 0.5),
 };
 
 export const timer = createSlice({
@@ -98,9 +99,18 @@ export const timer = createSlice({
         applyRandomizedValue: (state, action) => {
             state.delay.actual = action.payload;
         },
+        updateRandomRatio: (state, action) => {
+            state.randomRatio = Math.min(1, Math.max(0, action.payload));
+        },
     },
 });
 
-export const { updateValue, tick, reset, reload, applyRandomizedValue } =
-    timer.actions;
+export const {
+    updateValue,
+    tick,
+    reset,
+    reload,
+    applyRandomizedValue,
+    updateRandomRatio,
+} = timer.actions;
 export default timer.reducer;

@@ -7,9 +7,9 @@ import {
 } from '../features/timer';
 import { TypeEnum } from '../utils/enums';
 
-const randomizeRatio = import.meta.env.VITE_RANDOMIZE_RATIO || 0.5;
+//const randomizeRatio = import.meta.env.VITE_RANDOMIZE_RATIO || 0.5;
 
-export const doRandomize = (value) => {
+export const doRandomize = (value, randomizeRatio) => {
     const randomizedPart =
         value * (Math.random() * randomizeRatio * 2 - randomizeRatio);
     return Math.round(value + randomizedPart);
@@ -18,10 +18,11 @@ export const doRandomize = (value) => {
 export const useTimerTick = () => {
     const dispatch = useDispatch();
     const values = useSelector((state) => state.timer);
+    const randomizeRatio = useSelector((state) => state.timer.randomRatio);
 
     const tickDelay = async (signal, isRandomized) => {
         const actualDelayValue = isRandomized
-            ? doRandomize(values.delay.actual)
+            ? doRandomize(values.delay.actual, randomizeRatio)
             : values.delay.actual;
 
         dispatch(applyRandomizedValue(actualDelayValue));

@@ -12,7 +12,7 @@ const initialState = {
 
     // Configuration
     audioThreshold: parseFloat(import.meta.env.VITE_AUDIO_THRESHOLD || 0.7),
-    audioLevel: 0, // Niveau audio actuel pour feedback visuel (0-1)
+    audioLevel: 0,
 };
 
 export const shotRecording = createSlice({

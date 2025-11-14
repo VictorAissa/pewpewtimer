@@ -6,10 +6,7 @@ import RandomizeButton from '../components/RandomizeButton';
 import TimeDisplay from '../components/TimeDisplay';
 import {
     updateValue,
-    //tick,
     reset,
-    //reload,
-    //applyRandomizedValue,
 } from '../features/timer';
 import { TypeEnum } from '../utils/enums';
 import shotDetectionService from '../services/ShotDetectionService';
