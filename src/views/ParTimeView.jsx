@@ -47,9 +47,8 @@ function ParTimeView() {
 
     const start = async () => {
         if (values.isRunning) return;
-        playBeepStart();
 
-        //await audioService.init();
+        await audioService.init();
 
         dispatch(
             updateValue({
@@ -191,7 +190,7 @@ function ParTimeView() {
 
             <div className="flex justify-center gap-6 p-6">
                 <Button
-                    onClick={start}
+                    onClick={playBeepStart}
                     variant="primary"
                     disabled={values.isRunning}
                 >
