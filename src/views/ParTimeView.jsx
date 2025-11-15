@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import audioService from '../services/AudioService';
-import audioContextManager from '../services/AudioContextManager';
 import { updateValue, tick, reset, reload } from '../features/timer';
 import { TypeEnum } from '../utils/enums';
 import Button from '../components/Button';
@@ -48,8 +47,6 @@ function ParTimeView() {
 
     const start = async () => {
         if (values.isRunning) return;
-
-        audioContextManager.getContext().resume();
 
         await audioService.init();
 

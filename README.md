@@ -71,8 +71,9 @@ You can modify the randomising ratio to make the random values variying from 0 (
 
 ## Troubleshotting
 
+-   The PAR time feature is currently unavailable on iOS because Apple's teams found it brilliant to disallow asynchronous sound playback after a click
 -   On iOS (Safari), the settings level bars are a bit buggy: you should double tap the desired level on the bar to set it
--   Sometimes microphone access through audio APIs is not supported on the device and some features may not work
+-   Microphone access through audio APIs could not be supported on the device and some features may not work
 
 ---
 
@@ -84,6 +85,7 @@ Cette application est optimisée pour les appareils mobiles et doit être instal
 ## Lancement
 
 Une fois le projet récupéré, télécharge les dépendances :
+
 ```bash
 # NPM
 npm i
@@ -93,6 +95,7 @@ yarn
 ```
 
 Lance le serveur de développement :
+
 ```bash
 # NPM
 npm run dev
@@ -147,5 +150,6 @@ Tu peux modifier le ratio d'aléatoirisation pour faire varier les valeurs aléa
 
 ## Dépannage
 
+-   La fonctionnalité PAR time n'est pas disponible pour l'instant sur ios car les équipes Apple ont trouvé génial de ne pas autoriser les sons au clic en asynchrone
 -   Sur iOS (Safari), les barres de niveau dans les réglages sont un peu buguées : tu dois double-taper sur le niveau souhaité sur la barre pour le définir
 -   Parfois l'accès au microphone via les APIs audio n'est pas supporté sur l'appareil et certaines fonctionnalités peuvent ne pas fonctionner
