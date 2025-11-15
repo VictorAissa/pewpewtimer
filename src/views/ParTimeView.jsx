@@ -126,8 +126,8 @@ function ParTimeView() {
             }
         };
 
-        loadAudio();
         initMic();
+        loadAudio();
 
         return () => {
             shotDetectionService.cleanup();
