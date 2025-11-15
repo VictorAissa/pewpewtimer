@@ -47,8 +47,9 @@ function ParTimeView() {
 
     const start = async () => {
         if (values.isRunning) return;
+        playBeepStart();
 
-        await audioService.init();
+        //await audioService.init();
 
         dispatch(
             updateValue({
