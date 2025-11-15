@@ -4,10 +4,7 @@ import Button from '../components/Button';
 import AudioLevelIndicator from '../components/AudioLevelIndicator';
 import RandomizeButton from '../components/RandomizeButton';
 import TimeDisplay from '../components/TimeDisplay';
-import {
-    updateValue,
-    reset,
-} from '../features/timer';
+import { updateValue, reset } from '../features/timer';
 import { TypeEnum } from '../utils/enums';
 import shotDetectionService from '../services/ShotDetectionService';
 import audioService from '../services/AudioService';

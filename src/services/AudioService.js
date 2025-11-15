@@ -1,3 +1,5 @@
+import audioContextManager from './AudioContextManager';
+
 class AudioService {
     constructor() {
         this.audioContext = null;
@@ -8,15 +10,15 @@ class AudioService {
     async init() {
         if (this.initialized) return;
 
-        this.audioContext = new (window.AudioContext ||
-            window.webkitAudioContext)();
+        this.audioContext = audioContextManager.getContext();
+        await this.audioContext.resume();
 
-        // Awake context on mobile devices
-        if (this.audioContext.state === 'suspended') {
-            await this.audioContext.resume();
-        }
+        this.initialized = true;
+    }
 
-        // Preload sounds files
+    async preloadSounds() {
+        if (Object.keys(this.buffers).length > 0) return;
+
         const sounds = {
             beepStart: '/sound/smooth.mp3',
             beepEnd: '/sound/sharp.mp3',
@@ -29,26 +31,15 @@ class AudioService {
                 arrayBuffer
             );
         }
-
-        this.initialized = true;
     }
 
     playSound(soundKey) {
-        if (!this.buffers[soundKey]) return;
+        if (!this.buffers[soundKey]) {
+            return;
+        }
 
         const source = this.audioContext.createBufferSource();
         source.buffer = this.buffers[soundKey];
-        source.connect(this.audioContext.destination);
-        source.start();
-    }
-
-    async unlock() {
-        if (this.audioContext.state === 'suspended') {
-            await this.audioContext.resume();
-        }
-        // Play silent sound to unlock iOS audio
-        const source = this.audioContext.createBufferSource();
-        source.buffer = this.audioContext.createBuffer(1, 1, 22050);
         source.connect(this.audioContext.destination);
         source.start();
     }

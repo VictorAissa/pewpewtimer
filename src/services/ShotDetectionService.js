@@ -1,3 +1,5 @@
+import audioContextManager from './AudioContextManager';
+
 class ShotDetectionService {
     constructor() {
         this.audioContext = null;
@@ -15,17 +17,11 @@ class ShotDetectionService {
     }
 
     async init() {
-        try {
-            // Create or reuse AudioContext
-            if (!this.audioContext) {
-                this.audioContext = new (window.AudioContext ||
-                    window.webkitAudioContext)();
-            }
+        if (this.analyser) return true;
 
-            // Awake context on mobile devices
-            if (this.audioContext.state === 'suspended') {
-                await this.audioContext.resume();
-            }
+        try {
+            this.audioContext = audioContextManager.getContext();
+            await audioContextManager.resume();
 
             // Ask for microphone access
             const stream = await navigator.mediaDevices.getUserMedia({
@@ -139,12 +135,7 @@ class ShotDetectionService {
             this.source = null;
         }
 
-        // Close AudioContext if possible
-        if (this.audioContext && this.audioContext.state !== 'closed') {
-            this.audioContext.close();
-            this.audioContext = null;
-        }
-
+        this.audioContext = null;
         this.analyser = null;
         this.dataArray = null;
     }
@@ -155,16 +146,6 @@ class ShotDetectionService {
             navigator.mediaDevices.getUserMedia &&
             (window.AudioContext || window.webkitAudioContext)
         );
-    }
-
-    // Get current status
-    getStatus() {
-        return {
-            initialized: !!this.analyser,
-            listening: this.isListening,
-            microphoneActive: !!this.microphone,
-            supported: ShotDetectionService.isSupported(),
-        };
     }
 }
 

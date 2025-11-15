@@ -1,9 +1,14 @@
 import PropTypes from 'prop-types';
 import { ClockIcon, MicrophoneIcon } from '@heroicons/react/24/outline';
 import SettingsDrawer from './SettingsDrawer';
+import { useSelector } from 'react-redux';
 
 const Footer = ({ currentMode, onModeChange }) => {
+    const timerValues = useSelector((state) => state.timer);
+
     const handleModeChange = (mode) => {
+        if (timerValues.isRunning) return;
+
         onModeChange(mode);
     };
 

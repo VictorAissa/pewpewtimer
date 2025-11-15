@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import audioService from '../services/AudioService';
 import {
@@ -56,9 +56,6 @@ function ParTimeView() {
 
         await audioService.init();
 
-        // Unlock AudioContext on iOS by triggering audio in user interaction context
-        await audioService.unlock();
-
         dispatch(
             updateValue({
                 type: TypeEnum.isRunning,
@@ -103,6 +100,14 @@ function ParTimeView() {
             })
         );
     };
+
+    useEffect(() => {
+        const loadAudio = async () => {
+            await audioService.init();
+            await audioService.preloadSounds();
+        };
+        loadAudio();
+    }, []);
 
     return (
         <div className={`flex-1 ${values.isPar ? 'isPar' : 'isDelay'}`}>
