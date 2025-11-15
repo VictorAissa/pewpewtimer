@@ -20,6 +20,7 @@ function ParTimeView() {
     const [controller, setController] = useState(null);
     const [isRandomized, setIsRandomized] = useState(false);
     const { tickDelay } = useTimerTick();
+    const [audioUnlocked, setAudioUnlocked] = useState(false);
 
     /* UTILS */
     const playBeepStart = () => audioService.playSound('beepStart');
@@ -53,6 +54,11 @@ function ParTimeView() {
 
     const start = async () => {
         if (values.isRunning) return;
+
+        if (!audioUnlocked) {
+            audioService.unlockAudio();
+            setAudioUnlocked(true);
+        }
 
         await audioService.init();
 
