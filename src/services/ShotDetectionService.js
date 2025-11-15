@@ -22,6 +22,11 @@ class ShotDetectionService {
                     window.webkitAudioContext)();
             }
 
+            // Awake context on mobile devices
+            if (this.audioContext.state === 'suspended') {
+                await this.audioContext.resume();
+            }
+
             // Ask for microphone access
             const stream = await navigator.mediaDevices.getUserMedia({
                 audio: {
