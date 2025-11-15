@@ -11,7 +11,7 @@ const initialState = {
     totalTime: null,
 
     // Configuration
-    audioThreshold: parseFloat(import.meta.env.VITE_AUDIO_THRESHOLD || 0.7),
+    audioThreshold: parseFloat(import.meta.env.VITE_AUDIO_THRESHOLD || 0.8),
     audioLevel: 0,
 };
 

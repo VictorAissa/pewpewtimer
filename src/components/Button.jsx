@@ -1,6 +1,6 @@
 function Button({
     onClick,
-    variant = 'primary', // 'primary', 'danger', 'disabled'
+    variant = 'primary',
     children,
     disabled = false,
     className = '',

@@ -1,8 +1,8 @@
 import { Drawer, DrawerContent, DrawerTrigger } from './ui/drawer';
 import { useSelector, useDispatch } from 'react-redux';
-import Button from './Button';
 import { updateRandomRatio } from '../features/timer';
 import { updateAudioThreshold } from '../features/shotRecording';
+import { Cog6ToothIcon } from '@heroicons/react/24/outline';
 
 function SettingsDrawer() {
     const dispatch = useDispatch();
@@ -24,7 +24,10 @@ function SettingsDrawer() {
     return (
         <Drawer>
             <DrawerTrigger asChild>
-                <Button variant="secondary">Settings</Button>
+                <button className="flex flex-col items-center gap-1 text-gray-400 hover:text-[#95C623] transition-colors">
+                    <Cog6ToothIcon className="w-6 h-6" />
+                    <span className="text-xs">Settings</span>
+                </button>
             </DrawerTrigger>
             <DrawerContent className="bg-gray-50 text-black">
                 <div className="p-6 space-y-6">

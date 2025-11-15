@@ -1,5 +1,6 @@
+import PropTypes from 'prop-types';
+
 function RandomizeButton({ isRandomized, onToggle, className = '' }) {
-    
     const handleClick = (event) => {
         event.preventDefault();
         onToggle();
@@ -16,5 +17,11 @@ function RandomizeButton({ isRandomized, onToggle, className = '' }) {
         </button>
     );
 }
+
+RandomizeButton.propTypes = {
+    isRandomized: PropTypes.bool.isRequired,
+    onToggle: PropTypes.func.isRequired,
+    className: PropTypes.string,
+};
 
 export default RandomizeButton;
