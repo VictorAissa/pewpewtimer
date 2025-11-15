@@ -73,3 +73,79 @@ You can modify the randomising ratio to make the random values variying from 0 (
 
 -   On iOS (Safari), the settings level bars are a bit buggy: you should double tap the desired level on the bar to set it
 -   Sometimes microphone access through audio APIs is not supported on the device and some features may not work
+
+---
+
+# PEW PEW TIMER
+
+Un timer PAR simple et gratuit avec enregistrement des temps de tir pour l'entraînement au tir.  
+Cette application est optimisée pour les appareils mobiles et doit être installée en tant que PWA.
+
+## Lancement
+
+Une fois le projet récupéré, télécharge les dépendances :
+```bash
+# NPM
+npm i
+
+# Yarn
+yarn
+```
+
+Lance le serveur de développement :
+```bash
+# NPM
+npm run dev
+
+# Yarn
+yarn run dev
+```
+
+### Version en ligne
+
+https://pewpewtimer.vercel.app
+
+**Android** (Chrome/Edge/Samsung Internet) :
+
+-   Appuie sur le menu trois points (⋮) en haut à droite
+-   Sélectionne "Ajouter à l'écran d'accueil" ou "Installer l'application"
+
+**iOS** (Safari) :
+
+-   Appuie sur le bouton Partager (carré avec flèche vers le haut) en bas de l'écran
+-   Descends et appuie sur "Sur l'écran d'accueil"
+
+## Fonctionnement
+
+Il y a 2 modes accessibles depuis la barre de navigation en bas : timer PAR et enregistrement des tirs, plus un modal de réglages.
+
+### Timer PAR
+
+Choisis les durées pour le timer PAR, le délai entre chaque répétition, et le nombre de répétitions en secondes. Le système accepte une décimale sauf pour les répétitions.  
+Lance le timer en cliquant sur le bouton **Start**. Le système fournit des indications textuelles et des couleurs pour t'informer de l'étape en cours, ainsi que deux bips différents au début et à la fin du timer PAR.  
+Le bouton **Stop** réinitialise tout.
+
+**Randomize**  
+Tu peux aléatoiriser une partie du temps choisi pour la phase de délai en cliquant sur le bouton **Randomize**.  
+Le ratio d'aléatoirisation par défaut est de 0.5, mais tu peux le modifier dans le fichier `.env`.
+
+### Enregistrement
+
+Choisis la durée du délai unique avant l'enregistrement des tirs. Tu peux également l'aléatoiriser.  
+Le système enregistrera les temps de tir à partir du bip de fin du timer jusqu'à ce que tu appuies sur le bouton stop :
+
+-   temps du premier tir
+-   splits des autres tirs (+ temps total)
+-   temps total jusqu'au dernier tir une fois l'enregistreur arrêté + nombre de tirs
+
+Les données enregistrées resteront affichées jusqu'à ce que tu démarres un nouvel enregistrement en appuyant sur **Start**
+
+### Réglages
+
+Tu peux choisir le seuil de niveau audio à partir duquel le système enregistrera les événements, de 0 à 100. Une valeur de 80 (valeur par défaut) est suffisante pour enregistrer un tir sans enregistrer les événements bruyants ambiants. Tu peux essayer de le réduire au niveau approprié pour enregistrer les tirs à blanc.  
+Tu peux modifier le ratio d'aléatoirisation pour faire varier les valeurs aléatoires de 0 (aucune variation) à 100 (variations extrêmes).
+
+## Dépannage
+
+-   Sur iOS (Safari), les barres de niveau dans les réglages sont un peu buguées : tu dois double-taper sur le niveau souhaité sur la barre pour le définir
+-   Parfois l'accès au microphone via les APIs audio n'est pas supporté sur l'appareil et certaines fonctionnalités peuvent ne pas fonctionner
