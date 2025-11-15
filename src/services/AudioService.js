@@ -41,6 +41,17 @@ class AudioService {
         source.connect(this.audioContext.destination);
         source.start();
     }
+
+    async unlock() {
+        if (this.audioContext.state === 'suspended') {
+            await this.audioContext.resume();
+        }
+        // Play silent sound to unlock iOS audio
+        const source = this.audioContext.createBufferSource();
+        source.buffer = this.audioContext.createBuffer(1, 1, 22050);
+        source.connect(this.audioContext.destination);
+        source.start();
+    }
 }
 
 export default new AudioService();

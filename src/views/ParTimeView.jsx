@@ -53,7 +53,11 @@ function ParTimeView() {
 
     const start = async () => {
         if (values.isRunning) return;
+
         await audioService.init();
+
+        // Unlock AudioContext on iOS by triggering audio in user interaction context
+        await audioService.unlock();
 
         dispatch(
             updateValue({
