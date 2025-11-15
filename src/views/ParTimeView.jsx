@@ -1,14 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import audioService from '../services/AudioService';
-import shotDetectionService from '../services/ShotDetectionService';
-import {
-    updateValue,
-    tick,
-    reset,
-    reload,
-    //applyRandomizedValue,
-} from '../features/timer';
+import audioContextManager from '../services/AudioContextManager';
+import { updateValue, tick, reset, reload } from '../features/timer';
 import { TypeEnum } from '../utils/enums';
 import Button from '../components/Button';
 import RandomizeButton from '../components/RandomizeButton';
@@ -21,7 +15,6 @@ function ParTimeView() {
     const [controller, setController] = useState(null);
     const [isRandomized, setIsRandomized] = useState(false);
     const { tickDelay } = useTimerTick();
-    const [error, setError] = useState(null);
 
     /* UTILS */
     const playBeepStart = () => audioService.playSound('beepStart');
@@ -55,6 +48,8 @@ function ParTimeView() {
 
     const start = async () => {
         if (values.isRunning) return;
+
+        audioContextManager.getContext().resume();
 
         await audioService.init();
 
@@ -109,29 +104,7 @@ function ParTimeView() {
             await audioService.preloadSounds();
         };
 
-        const initMic = async () => {
-            setError(null);
-
-            if (!shotDetectionService.isSupported()) {
-                setError('Shots detection is not supported by this browser.');
-                return;
-            }
-
-            try {
-                await shotDetectionService.init();
-                console.log('Microphone initialisé');
-            } catch (error) {
-                console.error('Error init micro:', error);
-                setError(error.message);
-            }
-        };
-
-        initMic();
         loadAudio();
-
-        return () => {
-            shotDetectionService.cleanup();
-        };
     }, []);
 
     return (
