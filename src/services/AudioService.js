@@ -43,16 +43,6 @@ class AudioService {
         source.connect(this.audioContext.destination);
         source.start();
     }
-
-    /**
-     * Unlock audio on iOS by playing a silent sound
-     */
-    unlockAudio() {
-        const silent = this.audioContext.createBufferSource();
-        silent.buffer = this.audioContext.createBuffer(1, 1, 22050);
-        silent.connect(this.audioContext.destination);
-        silent.start();
-    }
 }
 
 export default new AudioService();
