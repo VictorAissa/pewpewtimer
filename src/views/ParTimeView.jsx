@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import audioService from '../services/AudioService';
-import shotDetectionService from '../services/ShotDetectionService';
-import audioContextManager from '../services/AudioContextManager';
 import { updateValue, tick, reset, reload } from '../features/timer';
 import { TypeEnum } from '../utils/enums';
 import Button from '../components/Button';
@@ -16,11 +14,6 @@ function ParTimeView() {
     const [controller, setController] = useState(null);
     const [isRandomized, setIsRandomized] = useState(false);
     const { tickDelay } = useTimerTick();
-    const isIOS =
-        /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-        ('ontouchend' in document && /Mac/.test(navigator.userAgent));
-
-    const [needsAudioUnlock, setNeedsAudioUnlock] = useState(false);
 
     /* UTILS */
     const playBeepStart = () => audioService.playSound('beepStart');
@@ -92,15 +85,6 @@ function ParTimeView() {
         }
     };
 
-    const unlockAudio = async () => {
-        try {
-            await shotDetectionService.init();
-            setNeedsAudioUnlock(false);
-        } catch (error) {
-            console.error('Error init micro:', error);
-        }
-    };
-
     /* EVENTS */
     const handleChange = (event) => {
         dispatch(
@@ -115,11 +99,6 @@ function ParTimeView() {
         const init = async () => {
             await audioService.init();
             await audioService.preloadSounds();
-
-            if (isIOS) {
-                const status = shotDetectionService.getStatus();
-                setNeedsAudioUnlock(!status.initialized);
-            }
         };
 
         init();
@@ -221,17 +200,6 @@ function ParTimeView() {
                     Stop
                 </Button>
             </div>
-
-            {needsAudioUnlock && (
-                <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
-                    <button
-                        onClick={unlockAudio}
-                        className="bg-white text-black px-6 py-3 rounded-lg text-xl font-semibold"
-                    >
-                        Enable Audio (Required for iOS)
-                    </button>
-                </div>
-            )}
         </div>
     );
 }
