@@ -16,12 +16,12 @@ function ParTimeView() {
     const [controller, setController] = useState(null);
     const [isRandomized, setIsRandomized] = useState(false);
     const { tickDelay } = useTimerTick();
-    const isIOS =
+    /*     const isIOS =
         /iPad|iPhone|iPod/.test(navigator.userAgent) ||
         ('ontouchend' in document && /Mac/.test(navigator.userAgent));
     const [needsAudioUnlock, setNeedsAudioUnlock] = useState(
         isIOS && !shotDetectionService.getStatus().initialized
-    );
+    ); */
 
     /* UTILS */
     const playBeepStart = () => audioService.playSound('beepStart');
@@ -96,7 +96,7 @@ function ParTimeView() {
     const unlockAudio = async () => {
         try {
             await shotDetectionService.init();
-            setNeedsAudioUnlock(false);
+            //setNeedsAudioUnlock(false);
         } catch (error) {
             console.error('Error init micro:', error);
         }
@@ -218,14 +218,12 @@ function ParTimeView() {
                 </Button>
             </div>
 
-            {needsAudioUnlock && (
-                <button
-                    onClick={unlockAudio}
-                    className="bg-white text-black px-6 py-3 rounded-lg text-xl font-semibold"
-                >
-                    Enable Audio (Required for iOS)
-                </button>
-            )}
+            <button
+                onClick={unlockAudio}
+                className="bg-white text-black px-6 py-3 rounded-lg text-xl font-semibold"
+            >
+                Enable Audio (Required for iOS)
+            </button>
         </div>
     );
 }
