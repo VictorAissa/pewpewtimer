@@ -16,12 +16,11 @@ function ParTimeView() {
     const [controller, setController] = useState(null);
     const [isRandomized, setIsRandomized] = useState(false);
     const { tickDelay } = useTimerTick();
-    /*     const isIOS =
+    const isIOS =
         /iPad|iPhone|iPod/.test(navigator.userAgent) ||
         ('ontouchend' in document && /Mac/.test(navigator.userAgent));
-    const [needsAudioUnlock, setNeedsAudioUnlock] = useState(
-        isIOS && !shotDetectionService.getStatus().initialized
-    ); */
+
+    const [needsAudioUnlock, setNeedsAudioUnlock] = useState(false);
 
     /* UTILS */
     const playBeepStart = () => audioService.playSound('beepStart');
@@ -96,7 +95,7 @@ function ParTimeView() {
     const unlockAudio = async () => {
         try {
             await shotDetectionService.init();
-            //setNeedsAudioUnlock(false);
+            setNeedsAudioUnlock(false);
         } catch (error) {
             console.error('Error init micro:', error);
         }
@@ -113,12 +112,17 @@ function ParTimeView() {
     };
 
     useEffect(() => {
-        const loadAudio = async () => {
+        const init = async () => {
             await audioService.init();
             await audioService.preloadSounds();
+
+            if (isIOS) {
+                const status = shotDetectionService.getStatus();
+                setNeedsAudioUnlock(!status.initialized);
+            }
         };
 
-        loadAudio();
+        init();
     }, []);
 
     return (
@@ -218,12 +222,16 @@ function ParTimeView() {
                 </Button>
             </div>
 
-            <button
-                onClick={unlockAudio}
-                className="bg-white text-black px-6 py-3 rounded-lg text-xl font-semibold"
-            >
-                Enable Audio (Required for iOS)
-            </button>
+            {needsAudioUnlock && (
+                <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+                    <button
+                        onClick={unlockAudio}
+                        className="bg-white text-black px-6 py-3 rounded-lg text-xl font-semibold"
+                    >
+                        Enable Audio (Required for iOS)
+                    </button>
+                </div>
+            )}
         </div>
     );
 }
