@@ -9,18 +9,16 @@ import audioStreamService from './services/AudioStreamService';
 
 function App() {
     const [currentMode, setCurrentMode] = useState('parTime');
-    const [isAudioInitialized, setIsAudioInitialized] = useState(false);
+    //const [isAudioInitialized, setIsAudioInitialized] = useState(false);
 
     const handleInitialUnlock = useCallback(async () => {
         try {
             await audioStreamService.initStream();
-            setIsAudioInitialized(true);
         } catch (e) {
-            console.warn(
-                "Impossible d'initialiser le flux audio, l'application peut continuer mais sans sons."
-            );
-            setIsAudioInitialized(true); // Continuer l'application même sans audio
-        }
+            console.warn('Impossible to initaite audio stream : ', e);
+        } /* finally {
+            setIsAudioInitialized(true);
+        } */
     }, []);
 
     useEffect(() => {
@@ -29,6 +27,7 @@ function App() {
 
         const enableNoSleep = () => {
             noSleep.enable();
+            handleInitialUnlock();
         };
 
         const disableNoSleep = () => {
@@ -42,9 +41,9 @@ function App() {
             document.removeEventListener('click', enableNoSleep);
             audioStreamService.cleanup();
         };
-    }, []);
+    }, [handleInitialUnlock]);
 
-    if (!isAudioInitialized) {
+    /*     if (!isAudioInitialized) {
         return (
             <Provider store={store}>
                 <div className="h-full w-full flex justify-center items-center text-gray-50 bg-gray-500 relative">
@@ -60,7 +59,7 @@ function App() {
                 </div>
             </Provider>
         );
-    }
+    } */
 
     return (
         <Provider store={store}>
