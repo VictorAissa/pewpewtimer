@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import audioService from '../services/AudioService';
+import audioContextManager from '../services/AudioContextManager';
 import { updateValue, tick, reset, reload } from '../features/timer';
 import { TypeEnum } from '../utils/enums';
 import Button from '../components/Button';
@@ -18,6 +19,14 @@ function ParTimeView() {
     /* UTILS */
     const playBeepStart = () => audioService.playSound('beepStart');
     const playBeepEnd = () => audioService.playSound('beepEnd');
+
+    const testBeep = () => {
+        // Force resume immédiatement
+        audioContextManager.getContext().resume();
+
+        // Joue le son directement
+        audioService.playSound('beepStart');
+    };
 
     /* DOMAIN */
     const tickParTime = async (signal) => {
@@ -190,7 +199,7 @@ function ParTimeView() {
 
             <div className="flex justify-center gap-6 p-6">
                 <Button
-                    onClick={playBeepStart}
+                    onClick={testBeep}
                     variant="primary"
                     disabled={values.isRunning}
                 >
