@@ -1,3 +1,8 @@
+/**
+ * Formats shot recording data into a structured array.
+ * @param {Object} shotRecording - The shot recording data
+ * @returns {Array} Formatted shot data
+ */
 export const formatShotData = (shotRecording) => {
     const { shots, sessionStartTime, firstShot, splits } = shotRecording;
 

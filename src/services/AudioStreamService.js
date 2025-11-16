@@ -1,5 +1,8 @@
 import audioContextManager from './AudioContextManager';
 
+/**
+ * Manage audio stream globally for the application.
+ */
 class AudioStreamService {
     constructor() {
         this.microphoneStream = null;
@@ -8,30 +11,29 @@ class AudioStreamService {
     }
 
     /**
-     * Initialise le flux micro et maintient le flux actif pour l'ensemble de l'application.
+     * Initializes the global audio stream.
+     * @return {Promise<boolean>} Resolves to true if the stream is active, false otherwise
      */
     async initStream() {
         if (this.initPromise) return this.initPromise;
 
-        // Retrait du mot-clé 'async' ici
         this.initPromise = new Promise((resolve, reject) => {
             if (
                 !navigator.mediaDevices ||
                 !navigator.mediaDevices.getUserMedia
             ) {
-                console.warn('getUserMedia non supporté.');
+                console.warn('getUserMedia non supported');
                 this.isStreamActive = false;
                 return resolve(false);
             }
 
-            // Utilisation d'une IIFE asynchrone pour gérer les 'await' à l'intérieur
             (async () => {
                 try {
-                    // 1. Initialise l'AudioContext via le manager
+                    // 1. Initialise AudioContext
                     audioContextManager.getContext();
                     await audioContextManager.resume();
 
-                    // 2. Demande et capture du flux micro
+                    // 2. Ask for microphone access and store the stream
                     const stream = await navigator.mediaDevices.getUserMedia({
                         audio: {
                             echoCancellation: false,
@@ -43,24 +45,23 @@ class AudioStreamService {
                     this.microphoneStream = stream;
                     this.isStreamActive = true;
 
-                    console.log('🔓 Flux audio global initialisé et actif.');
-                    resolve(true); // Termine la promesse en succès
+                    resolve(true);
                 } catch (error) {
                     console.error(
-                        "Échec de l'initialisation du flux audio global:",
+                        'Error while initiating global audio stream:',
                         error
                     );
                     this.isStreamActive = false;
-                    reject(error); // Termine la promesse en échec
+                    reject(error);
                 }
-            })(); // Exécution immédiate de la fonction asynchrone
+            })();
         });
 
         return this.initPromise;
     }
 
     /**
-     * Nettoie et stoppe le micro lors du démontage de l'application.
+     * Clean up and stop the microphone when the application is unmounted.
      */
     cleanup() {
         if (this.microphoneStream) {
@@ -68,11 +69,11 @@ class AudioStreamService {
             this.microphoneStream = null;
         }
         this.isStreamActive = false;
-        console.log('🔒 Flux micro global arrêté.');
     }
 
     /**
-     * Fournit le flux pour les services consommateurs (ex: ShotDetectionService).
+     * Give the stream to consumer services
+     * @return {MediaStream|null} Microphone stream or null if not available
      */
     getStream() {
         return this.microphoneStream;

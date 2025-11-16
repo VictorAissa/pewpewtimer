@@ -1,6 +1,9 @@
 import audioContextManager from './AudioContextManager';
 import audioStreamService from './AudioStreamService';
 
+/**
+ * Service to detect shots from microphone input.
+ */
 class ShotDetectionService {
     constructor() {
         this.audioContext = null;
@@ -17,6 +20,10 @@ class ShotDetectionService {
         this.levelCallback = null;
     }
 
+    /**
+     * Initialize the Shot Detection Service.
+     * @returns {Boolean} True if initialization is successful
+     */
     async init() {
         if (this.analyser) return true;
 
@@ -56,6 +63,12 @@ class ShotDetectionService {
         }
     }
 
+    /**
+     * Start listening for shots.
+     * @param {Function} shotCallback Callback when a shot is detected
+     * @param {Function} levelCallback Callback for audio level updates
+     * @param {Number} threshold level threshold for shot detection (0 to 1)
+     */
     startListening(shotCallback, levelCallback = null, threshold = 0.3) {
         if (!this.analyser) {
             throw new Error("Service non initialisé. Appelez init() d'abord.");
@@ -104,6 +117,9 @@ class ShotDetectionService {
         detectShots();
     }
 
+    /**
+     * Stop listening for shots.
+     */
     stopListening() {
         this.isListening = false;
 
@@ -120,6 +136,9 @@ class ShotDetectionService {
         return Math.min(1, Math.max(0, newThreshold));
     }
 
+    /**
+     * Clean up resources used by the service.
+     */
     cleanup() {
         this.stopListening();
 
@@ -129,12 +148,16 @@ class ShotDetectionService {
             this.source = null;
         }
 
-        this.microphone = null; 
+        this.microphone = null;
         this.audioContext = null;
         this.analyser = null;
         this.dataArray = null;
     }
 
+    /**
+     * Check if Shot Detection is supported in the current environment.
+     * @returns {Boolean} True if supported, false otherwise
+     */
     isSupported() {
         return !!(
             navigator.mediaDevices &&

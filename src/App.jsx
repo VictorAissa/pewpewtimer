@@ -9,16 +9,18 @@ import audioStreamService from './services/AudioStreamService';
 
 function App() {
     const [currentMode, setCurrentMode] = useState('parTime');
-    //const [isAudioInitialized, setIsAudioInitialized] = useState(false);
 
+    /**
+     * Handle the initial unlock of audio on user interaction.
+     * This is necessary for ios devices that block audio playback
+     * unless it is explicitly triggered by a user action.
+     */
     const handleInitialUnlock = useCallback(async () => {
         try {
             await audioStreamService.initStream();
         } catch (e) {
-            console.warn('Impossible to initaite audio stream : ', e);
-        } /* finally {
-            setIsAudioInitialized(true);
-        } */
+            console.warn('Error while initiating audio stream : ', e);
+        }
     }, []);
 
     useEffect(() => {
@@ -27,14 +29,20 @@ function App() {
 
         const enableNoSleep = () => {
             noSleep.enable();
-            handleInitialUnlock();
         };
 
         const disableNoSleep = () => {
             noSleep.disable();
         };
 
-        document.addEventListener('click', enableNoSleep, { once: true });
+        document.addEventListener(
+            'click',
+            () => {
+                enableNoSleep();
+                handleInitialUnlock();
+            },
+            { once: true }
+        );
 
         return () => {
             disableNoSleep();
@@ -42,24 +50,6 @@ function App() {
             audioStreamService.cleanup();
         };
     }, [handleInitialUnlock]);
-
-    /*     if (!isAudioInitialized) {
-        return (
-            <Provider store={store}>
-                <div className="h-full w-full flex justify-center items-center text-gray-50 bg-gray-500 relative">
-                    <div className="p-8 text-center bg-[--khaki-dark] md:rounded-md w-full md:w-9/12 lg:w-1/3">
-                        <h2 className="text-2xl font-bold mb-4">
-                            Autorisation Audio Requise
-                        </h2>
-
-                        <button onClick={handleInitialUnlock}>
-                            Démarrer l Application
-                        </button>
-                    </div>
-                </div>
-            </Provider>
-        );
-    } */
 
     return (
         <Provider store={store}>

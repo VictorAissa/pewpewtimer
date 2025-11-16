@@ -1,13 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import Button from '../components/Button';
-import AudioLevelIndicator from '../components/AudioLevelIndicator';
-import RandomizeButton from '../components/RandomizeButton';
-import TimeDisplay from '../components/TimeDisplay';
-import { updateValue, reset } from '../features/timer';
+import { useTimerTick } from '../hooks/useTimer';
 import { TypeEnum } from '../utils/enums';
-import shotDetectionService from '../services/ShotDetectionService';
+import { formatShotData } from '../utils/shotFormatters';
 import audioService from '../services/AudioService';
+import shotDetectionService from '../services/ShotDetectionService';
+import { updateValue, reset } from '../features/timer';
 import {
     addShot,
     updateAudioLevel,
@@ -15,22 +13,25 @@ import {
     resetSession,
     stopRecording as stopRecordingAction,
 } from '../features/shotRecording';
-import { formatShotData } from '../utils/shotFormatters';
-import { useTimerTick } from '../hooks/useTimer';
+import Button from '../components/Button';
+import AudioLevelIndicator from '../components/AudioLevelIndicator';
+import RandomizeButton from '../components/RandomizeButton';
+import TimeDisplay from '../components/TimeDisplay';
 
 function ShotRecordingView() {
-    const values = useSelector((state) => state.timer);
     const dispatch = useDispatch();
+    const timerValues = useSelector((state) => state.timer);
+
     const [isRandomized, setIsRandomized] = useState(false);
     const { audioThreshold, audioLevel } = useSelector(
         (state) => state.shotRecording
     );
     const shotRecording = useSelector((state) => state.shotRecording);
+    const isRecording = shotRecording.isRecording;
+    const { tickDelay } = useTimerTick();
     const formattedShots = formatShotData(shotRecording);
     const [controller, setController] = useState(null);
-    const isRecording = shotRecording.isRecording;
     const [error, setError] = useState(null);
-    const { tickDelay } = useTimerTick();
 
     const playBeepStart = () => audioService.playSound('beepStart');
 
@@ -44,7 +45,7 @@ function ShotRecordingView() {
     };
 
     const start = async () => {
-        if (values.isRunning) return;
+        if (timerValues.isRunning) return;
 
         dispatch(resetSession());
 
@@ -109,10 +110,9 @@ function ShotRecordingView() {
 
             try {
                 await shotDetectionService.init();
-                console.log('Microphone initialisé');
             } catch (error) {
                 console.error('Error init micro:', error);
-                setError(error.message);
+                setError('Error init micro, check permissions.');
             }
         };
 
@@ -123,8 +123,21 @@ function ShotRecordingView() {
         };
     }, []);
 
+    if (error) {
+        return (
+            <div
+                className="fixed inset-0 flex justify-center items-center bg-black/40 backdrop-blur-sm z-50"
+                onClick={() => setError(null)}
+            >
+                <div className="px-8 py-6 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl shadow-xl text-center text-gray-100 max-w-md w-11/12">
+                    <h2 className="text-2xl font-bold">{error}</h2>
+                </div>
+            </div>
+        );
+    }
+
     return (
-        <div className={`flex-1 ${values.isPar ? 'isPar' : 'isDelay'}`}>
+        <div className={`flex-1 ${timerValues.isPar ? 'isPar' : 'isDelay'}`}>
             <form className="flex justify-center p-6 text-xl gap-2">
                 <div className="flex flex-col text-xl gap-4">
                     <div className="flex justify-between gap-2">
@@ -133,7 +146,7 @@ function ShotRecordingView() {
                             type="number"
                             id="delay"
                             className="rounded-sm h-8 text-gray-700 w-12 text-center"
-                            value={values.delay.displayed}
+                            value={timerValues.delay.displayed}
                             onChange={handleDelayChange}
                             disabled={isRecording}
                         />
@@ -149,28 +162,24 @@ function ShotRecordingView() {
                 <div
                     className={
                         isRecording
-                            ? values.isPar
+                            ? timerValues.isPar
                                 ? 'isPar_text'
                                 : 'isDelay_text'
                             : 'isReady_text'
                     }
                 >
                     {isRecording
-                        ? values.isPar
+                        ? timerValues.isPar
                             ? 'RECORDING'
                             : 'WAIT'
                         : 'READY'}
                 </div>
-                <TimeDisplay value={values.delay.actual} isPar={false} />
-                {error ? (
-                    <div className="text-red-500 font-semibold">{error}</div>
-                ) : (
-                    isRecording && (
-                        <AudioLevelIndicator
-                            level={audioLevel}
-                            threshold={audioThreshold}
-                        />
-                    )
+                <TimeDisplay value={timerValues.delay.actual} isPar={false} />
+                {isRecording && (
+                    <AudioLevelIndicator
+                        level={audioLevel}
+                        threshold={audioThreshold}
+                    />
                 )}
             </div>
 

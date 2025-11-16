@@ -1,5 +1,8 @@
 import audioContextManager from './AudioContextManager';
 
+/**
+ * Service to manage audio playback.
+ */
 class AudioService {
     constructor() {
         this.audioContext = null;
@@ -7,6 +10,10 @@ class AudioService {
         this.initialized = false;
     }
 
+    /**
+     * Initialize the Audio Service.
+     * @returns {void}
+     */
     async init() {
         if (this.initialized) return;
 
@@ -16,6 +23,10 @@ class AudioService {
         this.initialized = true;
     }
 
+    /**
+     * Preload sound files into buffers.
+     * @returns {void}
+     */
     async preloadSounds() {
         if (Object.keys(this.buffers).length > 0) return;
 
@@ -33,6 +44,11 @@ class AudioService {
         }
     }
 
+    /**
+     * Play a sound by its key.
+     * @param {String} soundKey Key of the sound to play
+     * @returns {void}
+     */
     playSound(soundKey) {
         if (!this.buffers[soundKey]) {
             return;

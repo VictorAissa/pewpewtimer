@@ -51,7 +51,7 @@ Launch the timer by clicking the **Start** button. The system provides text and 
 
 **Randomize**  
 You can randomize a part of the choosen time for the delay stage by clicking the **Randomize** button.
-The default randomized ratio is 0.5, but you can change it in the `.env` file.
+The default randomized ratio is 0.5, but you can change it in the settings.
 
 ### Recording
 
@@ -71,9 +71,8 @@ You can modify the randomising ratio to make the random values variying from 0 (
 
 ## Troubleshotting
 
--   The PAR time feature is currently unavailable on iOS because Apple's teams found it brilliant to disallow asynchronous sound playback after a click
 -   On iOS (Safari), the settings level bars are a bit buggy: you should double tap the desired level on the bar to set it
--   Microphone access through audio APIs could not be supported on the device and some features may not work
+-   Microphone access through audio APIs could not be supported on the device and some recording features may not work
 
 ---
 
@@ -120,17 +119,17 @@ https://pewpewtimer.vercel.app
 
 ## Fonctionnement
 
-Il y a 2 modes accessibles depuis la barre de navigation en bas : timer PAR et enregistrement des tirs, plus un modal de réglages.
+Il y a 2 modes accessibles depuis la barre de navigation en bas : PAR timer et enregistrement des tirs, plus un modal de réglages.
 
-### Timer PAR
+### PAR Timer
 
-Choisis les durées pour le timer PAR, le délai entre chaque répétition, et le nombre de répétitions en secondes. Le système accepte une décimale sauf pour les répétitions.  
+Choisis les durées pour le timer, le délai entre chaque répétition, et le nombre de répétitions en secondes. Le système accepte une décimale sauf pour les répétitions.  
 Lance le timer en cliquant sur le bouton **Start**. Le système fournit des indications textuelles et des couleurs pour t'informer de l'étape en cours, ainsi que deux bips différents au début et à la fin du timer PAR.  
 Le bouton **Stop** réinitialise tout.
 
 **Randomize**  
-Tu peux aléatoiriser une partie du temps choisi pour la phase de délai en cliquant sur le bouton **Randomize**.  
-Le ratio d'aléatoirisation par défaut est de 0.5, mais tu peux le modifier dans le fichier `.env`.
+Tu peux rendre aléatoire une partie du temps choisi pour la phase de délai en cliquant sur le bouton **Randomize**.  
+Le ratio d'aléatoirisation par défaut est de 0.5, mais tu peux le modifier dans les réglages.
 
 ### Enregistrement
 
@@ -150,6 +149,5 @@ Tu peux modifier le ratio d'aléatoirisation pour faire varier les valeurs aléa
 
 ## Dépannage
 
--   La fonctionnalité PAR time n'est pas disponible pour l'instant sur ios car les équipes Apple ont trouvé génial de ne pas autoriser les sons au clic en asynchrone
--   Sur iOS (Safari), les barres de niveau dans les réglages sont un peu buguées : tu dois double-taper sur le niveau souhaité sur la barre pour le définir
--   Parfois l'accès au microphone via les APIs audio n'est pas supporté sur l'appareil et certaines fonctionnalités peuvent ne pas fonctionner
+-   Sur iOS, les barres de niveau dans les réglages sont un peu buguées : tu dois double-taper sur le niveau souhaité sur la barre pour le définir
+-   Parfois l'accès au microphone via les APIs audio n'est pas supporté sur l'appareil et les fonctionnalités d'enregistrement peuvent ne pas fonctionner

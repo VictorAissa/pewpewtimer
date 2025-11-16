@@ -1,25 +1,26 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import audioService from '../services/AudioService';
+import { useTimerTick } from '../hooks/useTimer';
 import { updateValue, tick, reset, reload } from '../features/timer';
 import { TypeEnum } from '../utils/enums';
 import Button from '../components/Button';
 import RandomizeButton from '../components/RandomizeButton';
 import TimeDisplay from '../components/TimeDisplay';
-import { useTimerTick } from '../hooks/useTimer';
 
 function ParTimeView() {
-    const values = useSelector((state) => state.timer);
     const dispatch = useDispatch();
+    const values = useSelector((state) => state.timer);
+
     const [controller, setController] = useState(null);
     const [isRandomized, setIsRandomized] = useState(false);
+    const [error, setError] = useState(null);
+
     const { tickDelay } = useTimerTick();
 
-    /* UTILS */
     const playBeepStart = () => audioService.playSound('beepStart');
     const playBeepEnd = () => audioService.playSound('beepEnd');
 
-    /* DOMAIN */
     const tickParTime = async (signal) => {
         dispatch(
             updateValue({
@@ -85,7 +86,6 @@ function ParTimeView() {
         }
     };
 
-    /* EVENTS */
     const handleChange = (event) => {
         dispatch(
             updateValue({
@@ -97,12 +97,30 @@ function ParTimeView() {
 
     useEffect(() => {
         const init = async () => {
-            await audioService.init();
-            await audioService.preloadSounds();
+            try {
+                await audioService.init();
+                await audioService.preloadSounds();
+            } catch (e) {
+                console.error('Error init audio service:', e);
+                setError('Error init audio service');
+            }
         };
 
         init();
     }, []);
+
+    if (error) {
+        return (
+            <div
+                className="fixed inset-0 flex justify-center items-center bg-black/40 backdrop-blur-sm z-50"
+                onClick={() => setError(null)}
+            >
+                <div className="px-8 py-6 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl shadow-xl text-center text-gray-100 max-w-md w-11/12">
+                    <h2 className="text-2xl font-bold">{error}</h2>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className={`flex-1 ${values.isPar ? 'isPar' : 'isDelay'}`}>
