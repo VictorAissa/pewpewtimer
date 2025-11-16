@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import audioService from '../services/AudioService';
+import shotDetectionService from '../services/ShotDetectionService';
 import audioContextManager from '../services/AudioContextManager';
 import { updateValue, tick, reset, reload } from '../features/timer';
 import { TypeEnum } from '../utils/enums';
@@ -15,18 +16,16 @@ function ParTimeView() {
     const [controller, setController] = useState(null);
     const [isRandomized, setIsRandomized] = useState(false);
     const { tickDelay } = useTimerTick();
+    const isIOS =
+        /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+        ('ontouchend' in document && /Mac/.test(navigator.userAgent));
+    const [needsAudioUnlock, setNeedsAudioUnlock] = useState(
+        isIOS && !shotDetectionService.getStatus().initialized
+    );
 
     /* UTILS */
     const playBeepStart = () => audioService.playSound('beepStart');
     const playBeepEnd = () => audioService.playSound('beepEnd');
-
-    const testBeep = () => {
-        // Force resume immédiatement
-        audioContextManager.getContext().resume();
-
-        // Joue le son directement
-        audioService.playSound('beepStart');
-    };
 
     /* DOMAIN */
     const tickParTime = async (signal) => {
@@ -91,6 +90,15 @@ function ParTimeView() {
         if (controller) {
             controller.abort();
             dispatch(reset());
+        }
+    };
+
+    const unlockAudio = async () => {
+        try {
+            await shotDetectionService.init();
+            setNeedsAudioUnlock(false);
+        } catch (error) {
+            console.error('Error init micro:', error);
         }
     };
 
@@ -199,7 +207,7 @@ function ParTimeView() {
 
             <div className="flex justify-center gap-6 p-6">
                 <Button
-                    onClick={testBeep}
+                    onClick={start}
                     variant="primary"
                     disabled={values.isRunning}
                 >
@@ -209,6 +217,17 @@ function ParTimeView() {
                     Stop
                 </Button>
             </div>
+
+            {needsAudioUnlock && (
+                <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+                    <button
+                        onClick={unlockAudio}
+                        className="bg-white text-black px-6 py-3 rounded-lg text-xl font-semibold"
+                    >
+                        Enable Audio (Required for iOS)
+                    </button>
+                </div>
+            )}
         </div>
     );
 }
