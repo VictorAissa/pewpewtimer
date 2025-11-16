@@ -1,4 +1,5 @@
 import audioContextManager from './AudioContextManager';
+import audioStreamService from './AudioStreamService';
 
 class ShotDetectionService {
     constructor() {
@@ -23,14 +24,13 @@ class ShotDetectionService {
             this.audioContext = audioContextManager.getContext();
             await audioContextManager.resume();
 
-            // Ask for microphone access
-            const stream = await navigator.mediaDevices.getUserMedia({
-                audio: {
-                    echoCancellation: false,
-                    noiseSuppression: false,
-                    autoGainControl: false,
-                },
-            });
+            const stream = audioStreamService.getStream();
+
+            if (!stream) {
+                throw new Error(
+                    "Flux audio non disponible. L'autorisation a été refusée."
+                );
+            }
 
             this.microphone = stream;
 
@@ -123,18 +123,13 @@ class ShotDetectionService {
     cleanup() {
         this.stopListening();
 
-        // Stop microphone
-        if (this.microphone) {
-            this.microphone.getTracks().forEach((track) => track.stop());
-            this.microphone = null;
-        }
-
         // Disconnect audio nodes
         if (this.source) {
             this.source.disconnect();
             this.source = null;
         }
 
+        this.microphone = null; 
         this.audioContext = null;
         this.analyser = null;
         this.dataArray = null;
