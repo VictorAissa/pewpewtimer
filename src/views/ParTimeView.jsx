@@ -219,14 +219,12 @@ function ParTimeView() {
             </div>
 
             {needsAudioUnlock && (
-                <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
-                    <button
-                        onClick={unlockAudio}
-                        className="bg-white text-black px-6 py-3 rounded-lg text-xl font-semibold"
-                    >
-                        Enable Audio (Required for iOS)
-                    </button>
-                </div>
+                <button
+                    onClick={unlockAudio}
+                    className="bg-white text-black px-6 py-3 rounded-lg text-xl font-semibold"
+                >
+                    Enable Audio (Required for iOS)
+                </button>
             )}
         </div>
     );
