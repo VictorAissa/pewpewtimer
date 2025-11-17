@@ -10,7 +10,7 @@ function TimeDisplay({ value, isRandomized }) {
         <div className="w-44 h-10 rounded-sm bg-white">
             <p
                 className={`w-full h-full flex justify-center items-center text-gray-800 text-2xl ${
-                    isRandomized ? 'blur-sm' : ''
+                    isRandomized ? 'blur' : ''
                 }`}
             >
                 {' '}
