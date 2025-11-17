@@ -32,7 +32,6 @@ function ShotRecordingView() {
     const formattedShots = formatShotData(shotRecording);
     const [controller, setController] = useState(null);
     const [error, setError] = useState(null);
-    const [isDismissed, setIsDismissed] = useState(false);
 
     const playBeepStart = () => audioService.playSound('beepStart');
 
@@ -106,7 +105,6 @@ function ShotRecordingView() {
 
             if (!shotDetectionService.isSupported()) {
                 setError('Shots detection is not supported by this browser.');
-                setIsDismissed(false);
                 return;
             }
 
@@ -115,8 +113,6 @@ function ShotRecordingView() {
             } catch (error) {
                 console.error('Error init micro:', error);
                 setError('Error init micro, check permissions.');
-            } finally {
-                setIsDismissed(false);
             }
         };
 
@@ -127,11 +123,11 @@ function ShotRecordingView() {
         };
     }, []);
 
-    if (error && !isDismissed) {
+    if (error) {
         return (
             <div
                 className="fixed inset-0 flex justify-center items-center bg-black/40 backdrop-blur-sm z-50"
-                onClick={() => setIsDismissed(true)}
+                onClick={() => setError(null)}
             >
                 <div className="px-8 py-6 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl shadow-xl text-center text-gray-100 max-w-md w-11/12">
                     <h2 className="text-2xl font-bold">{error}</h2>
