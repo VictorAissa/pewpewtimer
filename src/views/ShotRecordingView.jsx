@@ -192,7 +192,10 @@ function ShotRecordingView() {
                             : 'WAIT'
                         : 'READY'}
                 </div>
-                <TimeDisplay value={timerValues.delay.actual} isPar={false} />
+                <TimeDisplay
+                    value={timerValues.delay.actual}
+                    isRandomized={isRandomized}
+                />
                 {isRecording && (
                     <AudioLevelIndicator
                         level={audioLevel}

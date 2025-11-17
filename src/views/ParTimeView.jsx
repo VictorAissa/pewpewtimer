@@ -216,7 +216,7 @@ function ParTimeView() {
                             ? values.parTime.actual
                             : values.delay.actual
                     }
-                    isPar={values.isPar}
+                    isRandomized={isRandomized}
                 />
                 <div>
                     {isNaN(values.reps.actual)
