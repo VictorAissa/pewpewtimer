@@ -123,6 +123,21 @@ function ShotRecordingView() {
         };
     }, []);
 
+    useEffect(() => {
+        if (!error) return;
+
+        const intervalId = setInterval(async () => {
+            try {
+                await shotDetectionService.init();
+                setError(null);
+            } catch (e) {
+                console.error('Error retrying to init micro:', e);
+            }
+        }, 2000);
+
+        return () => clearInterval(intervalId);
+    }, [error]);
+
     if (error) {
         return (
             <div
