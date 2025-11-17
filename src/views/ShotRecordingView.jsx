@@ -162,6 +162,7 @@ function ShotRecordingView() {
                         <label htmlFor="delay">Delay :</label>
                         <input
                             type="number"
+                            min="0"
                             id="delay"
                             className="rounded-sm h-8 text-gray-700 w-12 text-center"
                             value={timerValues.delay.displayed}

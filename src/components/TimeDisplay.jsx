@@ -7,12 +7,15 @@ function TimeDisplay({ value, isRandomized }) {
     };
 
     return (
-        <div
-            className={`w-44 h-10 rounded-sm bg-white flex justify-center items-center text-gray-800 text-2xl ${
-                isRandomized ? 'blur-md' : ''
-            }`}
-        >
-            {getDecimalDisplay(value)}
+        <div className="w-44 h-10 rounded-sm bg-white">
+            <p
+                className={`w-full h-full flex justify-center items-center text-gray-800 text-2xl ${
+                    isRandomized ? 'blur-sm' : ''
+                }`}
+            >
+                {' '}
+                {getDecimalDisplay(value)}
+            </p>
         </div>
     );
 }

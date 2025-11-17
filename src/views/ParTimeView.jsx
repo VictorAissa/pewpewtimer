@@ -150,6 +150,7 @@ function ParTimeView() {
                         <input
                             className="rounded-sm h-8 text-gray-700 w-12 text-center"
                             type="number"
+                            min="0"
                             id="parTime"
                             value={values.parTime.displayed}
                             onChange={handleChange}
@@ -160,6 +161,7 @@ function ParTimeView() {
                         <label htmlFor="delay">Delay :</label>
                         <input
                             type="number"
+                            min="0"
                             id="delay"
                             className="rounded-sm h-8 text-gray-700 w-12 text-center"
                             value={values.delay.displayed}
@@ -179,6 +181,7 @@ function ParTimeView() {
                             onChange={handleChange}
                             step="1"
                             pattern="[0-100]*"
+                            min="0"
                             disabled={values.isRunning}
                             onKeyDown={(e) => {
                                 if (e.key === '.' || e.key === ',') {
