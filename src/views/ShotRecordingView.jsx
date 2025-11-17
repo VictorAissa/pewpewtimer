@@ -112,7 +112,7 @@ function ShotRecordingView() {
                 await shotDetectionService.init();
             } catch (error) {
                 console.error('Error init micro:', error);
-                setError('Error init micro, check permissions.');
+                setError('Micro non initialized, check permissions.');
             }
         };
 
@@ -123,6 +123,9 @@ function ShotRecordingView() {
         };
     }, []);
 
+    /**
+     * Retry init if error
+     */
     useEffect(() => {
         if (!error) return;
 
