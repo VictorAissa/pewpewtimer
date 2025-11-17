@@ -143,10 +143,7 @@ function ShotRecordingView() {
 
     if (error) {
         return (
-            <div
-                className="fixed inset-0 flex justify-center items-center bg-black/40 backdrop-blur-sm z-50"
-                onClick={() => setError(null)}
-            >
+            <div className="fixed inset-0 flex justify-center items-center bg-black/40 backdrop-blur-sm z-50">
                 <div className="px-8 py-6 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl shadow-xl text-center text-gray-100 max-w-md w-11/12">
                     <h2 className="text-2xl font-bold">{error}</h2>
                 </div>
